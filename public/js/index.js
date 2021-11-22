@@ -1,6 +1,4 @@
 import * as THREE from "/node_modules/three/build/three.module.js";
-/*import { OrbitControls } from "/node_modules/three/examples/jsm/controls/OrbitControls";
-import Stats from "/node_modules/three/examples/js/libs/stats.min.js"*/
 
 //global declaration
 let scene;
@@ -27,6 +25,7 @@ renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 container.appendChild(renderer.domElement);
+
 
 // stars
 const r = 6371, starsGeometry = [ new THREE.BufferGeometry(), new THREE.BufferGeometry()];
@@ -86,20 +85,65 @@ for ( let i = 10; i < 30; i ++ ) {
 
 }
 
-/*controls = new OrbitControls(camera, renderer.domElement)
-controls.enableDamping = true;
-controls.dampingFactor = 0.05;
-controls.enableZoom = true;
-controls.update();
+//sun object
+const color = new THREE.Color("#FDB813");
+const geometry = new THREE.IcosahedronGeometry(1, 15);
+const material = new THREE.MeshBasicMaterial({ color: color });
+const sphere = new THREE.Mesh(geometry, material);
+sphere.position.set(-50, 20, -60);
+scene.add(sphere);
 
-stats = new Stats()
-container.appendChild( stats.dom );*/
+//earth geometry
+const earthgeometry = new THREE.SphereGeometry(0.98, 32, 32);
 
-//test
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
+//earth material
+const earthMaterial = new THREE.MeshPhongMaterial({
+  /*map: new THREE.TextureLoader().load("texture/earthmap1.jpg"),
+    bumpMap: new THREE.TextureLoader().load("texture/bump.jpg"),
+    bumpScale: 0.3,*/
+});
+
+//earthMesh
+const earthMesh = new THREE.Mesh(earthgeometry, earthMaterial);
+earthMesh.receiveShadow = true;
+earthMesh.castShadow = true;
+earthMesh.layers.set(0);
+scene.add(earthMesh);
+
+//cloud geometry
+const cloudgeometry = new THREE.SphereGeometry(1, 32, 32);
+
+//cloud material
+const cloudMaterial = new THREE.MeshPhongMaterial({
+    /*map: new THREE.TextureLoader().load("texture/earthCloud.png"),
+    transparent: true,*/
+});
+
+//cloudMesh
+const cloud = new THREE.Mesh(cloudgeometry, cloudMaterial);
+earthMesh.layers.set(0);
+scene.add(cloud);
+
+//moon geometry
+const moongeometry = new THREE.SphereGeometry(0.1, 32, 32);
+
+//moon material
+const moonMaterial = new THREE.MeshPhongMaterial({
+   /* map: new THREE.TextureLoader().load("texture/moonmap4k.jpg"),
+    bumpMap: new THREE.TextureLoader().load("texture/moonbump4k.jpg"),
+    bumpScale: 0.02,*/
+});
+
+//moonMesh
+const moonMesh = new THREE.Mesh(moongeometry, moonMaterial);
+moonMesh.receiveShadow = true;
+moonMesh.castShadow = true;
+moonMesh.position.x = 2;
+scene.add(moonMesh);
+
+var moonPivot = new THREE.Object3D();
+earthMesh.add(moonPivot);
+moonPivot.add(moonMesh);
 
 
 //ambient light
@@ -129,11 +173,10 @@ window.addEventListener(
 //animation loop
 const animate = () => {
     requestAnimationFrame(animate);
-    //stats.begin();
     renderer.render(scene, camera);
-    //stats.end();
     camera.rotation.y += 0.001; 
-    //cube.rotation.y += 1
+    moonPivot.rotation.y -= 0.005;
+    moonPivot.rotation.x = 0.5;
 };
   
 animate();
