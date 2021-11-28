@@ -187,7 +187,10 @@ const animate = () => {
     moonPivot.rotation.x = 0.5;
     controls.update();
 };
-
-//start with all automation
   
 animate();
+
+//start with all automation
+function beginFirst(){
+    console.log("ti")
+}
