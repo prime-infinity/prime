@@ -1,4 +1,5 @@
 import * as THREE from "/node_modules/three/build/three.module.js";
+import { OrbitControls } from "/node_modules/three/examples/jsm/controls/OrbitControls.js";
 
 //global declaration
 let scene;
@@ -15,7 +16,8 @@ const far = 1e7;
 
 //camera
 camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-camera.position.set(0, 0, 4)
+//camera.position.set(0, 0, 4)
+camera.position.set(-200, 0, 8)
 scene.add(camera);
 
 renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -25,6 +27,12 @@ renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 container.appendChild(renderer.domElement);
+
+controls = new OrbitControls(camera, renderer.domElement)
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.enableZoom = true;
+controls.update();
 
 
 // stars
@@ -87,7 +95,7 @@ for ( let i = 10; i < 30; i ++ ) {
 
 //sun object
 const color = new THREE.Color("#FDB813");
-const geometry = new THREE.IcosahedronGeometry(1, 15);
+const geometry = new THREE.IcosahedronGeometry(10, 15);
 const material = new THREE.MeshBasicMaterial({ color: color });
 const sphere = new THREE.Mesh(geometry, material);
 sphere.position.set(-50, 20, -60);
@@ -174,9 +182,12 @@ window.addEventListener(
 const animate = () => {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-    camera.rotation.y += 0.001; 
+    //camera.rotation.y += 0.001; 
     moonPivot.rotation.y -= 0.005;
     moonPivot.rotation.x = 0.5;
+    controls.update();
 };
+
+//start with all automation
   
 animate();
