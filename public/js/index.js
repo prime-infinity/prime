@@ -1,5 +1,6 @@
 import * as THREE from "/node_modules/three/build/three.module.js";
 import { OrbitControls } from "/node_modules/three/examples/jsm/controls/OrbitControls.js";
+import gsap from "/node_modules/gsap/index.js"
 
 //global declaration
 let scene;
@@ -191,6 +192,63 @@ const animate = () => {
 animate();
 
 //start with all automation
-function beginFirst(){
-    console.log("ti")
-}
+document.getElementById('beginButton').addEventListener('click',()=>{
+
+    /*gsap.to(camera.position, {
+        duration:3,
+         x:2,
+         y:4,
+         ease: "Expo.easeOut",
+    })*/ //earth's position
+
+    /*camera.lookAt(earthMesh.position)
+    console.log(earthMesh.position)
+    console.log(camera.position)*/
+
+    const camrot = {'x':camera.rotation.x,'y':camera.rotation.y,'z':camera.rotation.z}
+    camera.lookAt(earthMesh.position)
+    const targetOrient = camera.quaternion.clone().normalize();
+
+    camera.rotation.x = camrot.x;
+    camera.rotation.y = camrot.y;
+    camera.rotation.z = camrot.z;
+
+    const aabb = new THREE.Box3().setFromObject(earthMesh)
+    const center = aabb.getCenter(new THREE.Vector3());
+    const size = aabb.getSize(new THREE.Vector3)
+
+    controls.enable = false;
+    const startOrient = camera.quaternion.clone();
+    const quaternion = camera.quaternion
+    const newCamera = camera
+    const newControls = controls
+
+    gsap.to({},{
+        duration:2,
+        onUpdate:function(){
+          quaternion.copy(startOrient).slerp(targetOrient,this.progress());
+        },
+        onComplete:function(){
+          onCc();
+        }
+    })
+
+    var onCc = function(){
+            
+        gsap.to(newCamera.position,{
+            duration:2,
+            x:center.x,
+            y:center.y,
+            z:center.z+4*size.z,
+            onUpdate:function(){
+                newCamera.lookAt(center)
+            },
+            onComplete:function(){
+                newControls.enable = true;
+                newControls.target.set(center.x,center.y,center.z)
+            }
+        })
+
+    }
+
+})
