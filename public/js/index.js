@@ -183,7 +183,6 @@ window.addEventListener(
 const animate = () => {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-    //camera.rotation.y += 0.001; 
     moonPivot.rotation.y -= 0.005;
     moonPivot.rotation.x = 0.5;
     controls.update();
@@ -193,17 +192,6 @@ animate();
 
 //start with all automation
 document.getElementById('beginButton').addEventListener('click',()=>{
-
-    /*gsap.to(camera.position, {
-        duration:3,
-         x:2,
-         y:4,
-         ease: "Expo.easeOut",
-    })*/ //earth's position
-
-    /*camera.lookAt(earthMesh.position)
-    console.log(earthMesh.position)
-    console.log(camera.position)*/
 
     const camrot = {'x':camera.rotation.x,'y':camera.rotation.y,'z':camera.rotation.z}
     camera.lookAt(earthMesh.position)
