@@ -1,6 +1,8 @@
 import * as THREE from "/node_modules/three/build/three.module.js";
 import { OrbitControls } from "/node_modules/three/examples/jsm/controls/OrbitControls.js";
-import gsap from "/node_modules/gsap/index.js"
+import gsap from "/node_modules/gsap/index.js";
+
+import Planet from "./helpers/Planet.js";
 
 //global declaration
 let scene;
@@ -179,16 +181,6 @@ window.addEventListener(
     false
 );
 
-//animation loop
-const animate = () => {
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-    moonPivot.rotation.y -= 0.005;
-    moonPivot.rotation.x = 0.5;
-    controls.update();
-};
-  
-animate();
 
 //start with all automation
 document.getElementById('beginButton').addEventListener('click',()=>{
@@ -240,3 +232,57 @@ document.getElementById('beginButton').addEventListener('click',()=>{
     }
 
 })
+
+
+/**
+ * FRONTEND SOLAR SYSTEM
+ */
+
+ //FE SUN
+ const FEsunGeometry = new THREE.SphereGeometry(8);
+ //const FEsunTexture = new THREE.TextureLoader().load("sun.jpeg");
+ const FEsunMaterial = new THREE.MeshBasicMaterial(/*{ map: sunTexture }*/);
+ const FEsunMesh = new THREE.Mesh(FEsunGeometry, FEsunMaterial);
+ const FEsolarSystem = new THREE.Group();
+ FEsolarSystem.add(FEsunMesh);
+ scene.add(FEsolarSystem);
+
+ const p1 = new Planet(2, 16/*, "mercury.png"*/);
+ const p1Mesh = p1.getMesh();
+ let p1System = new THREE.Group();
+ p1System.add(p1Mesh);
+
+ const p2 = new Planet(3, 32/*, "venus.jpeg"*/);
+ const p2Mesh = p2.getMesh();
+ let p2System = new THREE.Group();
+ p2System.add(p2Mesh);
+
+ const p3 = new Planet(4, 48/*, "earth.jpeg"*/);
+ const p3Mesh = p3.getMesh();
+ let p3System = new THREE.Group();
+ p3System.add(p3Mesh);
+
+ const p4 = new Planet(3, 64/*, "mars.jpeg"*/);
+ const p4Mesh = p4.getMesh();
+ let p4System = new THREE.Group();
+ p4System.add(p4Mesh);
+
+ FEsolarSystem.add(p1System, p2System, p3System, p4System);
+
+ const EARTH_YEAR = 2 * Math.PI * (1 / 60) * (1 / 60);
+//animation loop
+const animate = () => {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+    moonPivot.rotation.y += 0.005;
+    moonPivot.rotation.x = 0.5;
+
+    FEsunMesh.rotation.y += 0.001;
+    p1System.rotation.y += EARTH_YEAR * 4;
+    p2System.rotation.y += EARTH_YEAR * 2;
+    p3System.rotation.y += EARTH_YEAR;
+    p4System.rotation.y += EARTH_YEAR * 0.5;
+    controls.update();
+};
+    
+animate();
