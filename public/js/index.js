@@ -98,7 +98,7 @@ for ( let i = 10; i < 30; i ++ ) {
 
 //sun object
 const color = new THREE.Color("#FDB813");
-const geometry = new THREE.IcosahedronGeometry(10, 15);
+const geometry = new THREE.IcosahedronGeometry(30, 15);
 const material = new THREE.MeshBasicMaterial({ color: color });
 const sphere = new THREE.Mesh(geometry, material);
 sphere.position.set(-50, 20, -60);
@@ -226,6 +226,15 @@ document.getElementById('beginButton').addEventListener('click',()=>{
             onComplete:function(){
                 newControls.enable = true;
                 newControls.target.set(center.x,center.y,center.z)
+                
+                setTimeout(() => {
+                    
+                    gsap.to(newCamera.position,{duration:15,x:3.611498443228929,y:-2.0945486801372266,z:6.9078113524624785,ease:"Expo.easeOut"})
+
+                    gsap.to(newControls.target,{duration:15,x:0.29440327692019963,y:0.40089633201081043,z:-0.1177799160611541,ease:"Expo.easeOut"})
+
+
+                }, 2000);
             }
         })
 
@@ -268,6 +277,13 @@ document.getElementById('beginButton').addEventListener('click',()=>{
  p4System.add(p4Mesh);
 
  FEsolarSystem.add(p1System, p2System, p3System, p4System);
+
+ FEsolarSystem.position.set(100,100,100)
+
+/**
+ * end of FE solar system 
+ */
+
 
  const EARTH_YEAR = 2 * Math.PI * (1 / 60) * (1 / 60);
 //animation loop
