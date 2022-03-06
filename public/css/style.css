@@ -1,10 +1,15 @@
+body{
+    font-family:"Open sans" !important;
+}
 #container{
     height: 100vh;
 } 
 .btn-native{
-    background-color:aqua !important;
-    border:1px solid !important;
-    border-radius: 15px !important;
+    background-color:transparent !important;
+    border:2px solid !important;
+    border-radius: 0px !important;
+    color:white !important;
+    width:40%;
 }
 #beginButton{
     position: fixed;
@@ -17,9 +22,10 @@
 .origins{
     color: white;
     position: fixed;
-    bottom:5%;
+    top:50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 75%;
+    font-size: 14px;
 }
 

@@ -1,6 +1,7 @@
-import * as THREE from "/node_modules/three/build/three.module.js";
-import { OrbitControls } from "/node_modules/three/examples/jsm/controls/OrbitControls.js";
-import gsap from "/node_modules/gsap/index.js";
+import * as THREE from  "../node_modules/three/build/three.module.js";
+import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
+import  GLTFLoader  from '../node_modules/three/examples/js/loaders/GLTFLoader.js';
+import gsap from "../node_modules/gsap/index.js";
 
 import Planet from "./helpers/Planet.js";
 
@@ -279,6 +280,21 @@ document.getElementById('beginButton').addEventListener('click',()=>{
  FEsolarSystem.add(p1System, p2System, p3System, p4System);
 
  FEsolarSystem.position.set(100,100,100)
+
+ const loader = new GLTFLoader();
+  loader.load(
+    'models/scene.gltf',
+    function ( gltf ) {
+      scene.add( gltf.scene );
+      gltf.scene.position.y = 1
+    },
+    function ( xhr ) {
+      console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    },
+    function ( error ) {
+      console.log( 'An error happened',error );
+    }
+  );
 
 /**
  * end of FE solar system 
